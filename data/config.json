@@ -1,0 +1,34 @@
+{
+  "wifi": {
+    "ssid": "it-schaller",
+    "password": "Guest@IT-Schaller.de",
+    "hostname": "rotor"
+  },
+  "network": {
+    "easycomm_port": 4533,
+    "xmlrpc_port": 8080
+  },
+  "rotor": {
+    "azimuth": {
+      "min_angle": -180.0,
+      "max_angle": 540.0
+    },
+    "elevation": {
+      "min_angle": 0.0,
+      "max_angle": 90.0
+    },
+    "default_speed_az": 20.0,
+    "default_speed_el": 15.0,
+    "angle_tolerance": 1.0
+  },
+  "motor_pins": {
+    "azimuth": {
+      "pwm": 12,
+      "enable": 14
+    },
+    "elevation": {
+      "pwm": 13,
+      "enable": 15
+    }
+  }
+}

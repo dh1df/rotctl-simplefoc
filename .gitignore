@@ -1,0 +1,5 @@
+spiffs.bin
+*.sav
+all.txt
+gen_all
+build/

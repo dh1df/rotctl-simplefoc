@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azimuthal Antenna Control</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Azimuthal Antenna Control</h1>
+        
+        <div class="control-panel" style="pointer-events: auto;">
+            <div class="connection-status" id="status">
+                <span class="status-indicator" id="status-indicator"></span>
+                <span id="status-text">Connecting...</span>
+            </div>
+            
+            <div class="azimuth-display">
+                <span>Current direction:</span>
+                <span id="current-azimuth">0°</span>
+            </div>
+            
+            <div class="input-group">
+                <label for="manual-azimuth">Manual input:</label>
+                <input type="text" id="manual-azimuth" value="0">
+                <button id="set-azimuth-btn">Set</button>
+            </div>
+            
+            <div class="rotator-info">
+                <h3>Rotator Information</h3>
+                <p>Model: <span id="rotator-model">-</span></p>
+                <p>Min Azimuth: <span id="min-az">0&deg;</span></p>
+                <p>Max Azimuth: <span id="max-az">365&deg;</span></p>
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <object id="azimuth-map" type="image/svg+xml" data="AzimuthalMap.svg"></object>
+            <div class="click-instruction">Click on the map to change direction</div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

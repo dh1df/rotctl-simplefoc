@@ -1,0 +1,206 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    padding: 30px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.control-panel {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-indicator {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-indicator.connected {
+    background-color: #28a745;
+    box-shadow: 0 0 10px #28a745;
+}
+
+.status-indicator.disconnected {
+    background-color: #dc3545;
+}
+
+.status-indicator.connecting {
+    background-color: #ffc107;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.azimuth-display {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #495057;
+}
+
+#current-azimuth {
+    color: #007bff;
+    font-size: 1.4em;
+    margin-left: 10px;
+}
+
+.input-group {
+    display: block;
+    gap: 10px;
+    align-items: center;
+}
+
+.input-group label {
+    white-space: nowrap;
+}
+
+.input-group input {
+    width: 80px;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.input-group button {
+    padding: 8px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.input-group button:hover {
+    background: #0056b3;
+}
+
+.beamwidth-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.beamwidth-control input[type="range"] {
+    flex: 1;
+}
+
+#beamwidth-value {
+    min-width: 50px;
+    text-align: right;
+}
+
+.rotator-info {
+    background: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.rotator-info h3 {
+    margin-bottom: 10px;
+    color: #495057;
+    font-size: 1.1em;
+}
+
+.rotator-info p {
+    margin: 5px 0;
+    color: #6c757d;
+}
+
+.map-container {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+    z-index: 1;
+}
+
+#azimuth-map {
+    width: 100%;
+    max-width: 600px; /* Anpassen je nach SVG-Größe */
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    cursor: crosshair;
+    pointer-events: auto; /* Stellt sicher dass SVG klickbar ist */
+}
+
+.control-panel {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    position: relative;
+    z-index: 2; /* Höher as die Karte */
+}
+
+.click-instruction {
+    margin-top: 15px;
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* Stelle sicher dass Buttons und Inputs klickbar bleiben */
+input, button, select {
+    position: relative;
+    z-index: 3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    #azimuth-map {
+        width: 100%;
+        height: auto;
+    }
+    
+    .control-panel {
+        grid-template-columns: 1fr;
+    }
+}
