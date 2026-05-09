@@ -77,7 +77,15 @@ class AzimuthControl {
         this.centerX = 297;
         this.centerY = 421;
         this.radius = 255;
-	this.loc = Maidenhead.locatorToLatLon("JO60om");
+	    this.loc = Maidenhead.locatorToLatLon("JO60om");
+
+        // Zoom and pan properties
+        this.zoomLevel = 1;
+        this.panX = 0;
+        this.panY = 0;
+        this.isPanning = false;
+        this.panStartX = 0;
+        this.panStartY = 0;
 
         this.init();
     }
@@ -86,6 +94,7 @@ class AzimuthControl {
         this.bindElements();
         this.attachEventListeners();
         await this.loadSVG();
+        this.attachZoomPanHandlers();
         this.startPolling();
     }
 
@@ -176,10 +185,100 @@ class AzimuthControl {
 
             // Runde auf ganze degrees
             angle = Math.round(angle);
-	    // console.log("click", dx, dy, angle, rect, e.clientX, e.clientY, this.centerX, this.centerY);
+	        // console.log("click", dx, dy, angle, rect, e.clientX, e.clientY, this.centerX, this.centerY);
 
             this.setAzimuth(angle);
         });
+    }
+
+    attachZoomPanHandlers() {
+        if (!this.svgDoc) return;
+
+        const svg = this.svgDoc.documentElement;
+        const svgElement = this.mapObject;
+
+        // Mouse wheel zoom
+        svgElement.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomSpeed = 0.1;
+            const delta = e.deltaY > 0 ? -zoomSpeed : zoomSpeed;
+            this.zoomLevel = Math.max(0.5, Math.min(5, this.zoomLevel + delta));
+            this.updateTransform();
+        });
+
+        // Pan on mouse drag - right-click or middle-click
+        svgElement.addEventListener('mousedown', (e) => {
+            if (e.button !== 2 && e.button !== 1) return; // Right-click (2) or middle-click (1)
+            e.preventDefault();
+            this.isPanning = true;
+            this.panStartX = e.clientX - this.panX;
+            this.panStartY = e.clientY - this.panY;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!this.isPanning) return;
+            this.panX = e.clientX - this.panStartX;
+            this.panY = e.clientY - this.panStartY;
+            this.updateTransform();
+        });
+
+        document.addEventListener('mouseup', () => {
+            this.isPanning = false;
+        });
+
+        // Touch support: pinch to zoom and drag to pan
+        let touchStartDistance = 0;
+        let touchStartPan = { x: 0, y: 0 };
+
+        svgElement.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                // Pinch zoom
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const dx = touch2.clientX - touch1.clientX;
+                const dy = touch2.clientY - touch1.clientY;
+                touchStartDistance = Math.sqrt(dx * dx + dy * dy);
+            } else if (e.touches.length === 1) {
+                // Single touch pan
+                this.isPanning = true;
+                touchStartPan = { x: e.touches[0].clientX - this.panX, y: e.touches[0].clientY - this.panY };
+            }
+        });
+
+        svgElement.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+
+            if (e.touches.length === 2) {
+                // Pinch zoom
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const dx = touch2.clientX - touch1.clientX;
+                const dy = touch2.clientY - touch1.clientY;
+                const currentDistance = Math.sqrt(dx * dx + dy * dy);
+                const zoomDelta = (currentDistance - touchStartDistance) * 0.01;
+                this.zoomLevel = Math.max(0.5, Math.min(5, this.zoomLevel + zoomDelta));
+                touchStartDistance = currentDistance;
+                this.updateTransform();
+            } else if (e.touches.length === 1 && this.isPanning) {
+                // Single touch pan
+                this.panX = e.touches[0].clientX - touchStartPan.x;
+                this.panY = e.touches[0].clientY - touchStartPan.y;
+                this.updateTransform();
+            }
+        });
+
+        svgElement.addEventListener('touchend', () => {
+            this.isPanning = false;
+            touchStartDistance = 0;
+        });
+    }
+
+    updateTransform() {
+        if (!this.svgDoc) return;
+        const svg = this.svgDoc.documentElement;
+        svg.style.transform = `translate(${this.panX}px, ${this.panY}px) scale(${this.zoomLevel})`;
+        svg.style.transformOrigin = 'center';
+        svg.style.transition = 'none';
     }
 
     updateSector() {
@@ -262,7 +361,7 @@ class AzimuthControl {
         const val=this.manualInput.value.toUpperCase();
         
         if (/^[A-R]{2}([0-9]{2}([A-X]{2}([0-9]{2})?)?)?$/.test(val)) {
-	    const dst = Maidenhead.locatorToLatLon(val);
+	        const dst = Maidenhead.locatorToLatLon(val);
             // console.log("Maidenhead2", val, this.loc, dst);
             // console.log("Maidenhead3", this.loc.lat, this.loc.lon);
     	    // console.log("Maidenhead4", Maidenhead.bearing(this.loc.lat, this.loc.lon, dst.lat, dst.lon));
@@ -316,7 +415,7 @@ class AzimuthControl {
                     this.rotatorInfo = { ...this.rotatorInfo, ...data.info };
                     this.updateRotatorInfo();
                 }
-		*/
+				*/
             } else {
                 this.connected = false;
                 this.setStatus('disconnected', 'Disconnected');

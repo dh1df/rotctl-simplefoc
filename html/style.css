@@ -152,16 +152,26 @@ h1 {
     text-align: center;
     margin: 20px 0;
     z-index: 1;
+    overflow: hidden;
 }
 
 #azimuth-map {
     width: 100%;
-    max-width: 600px; /* Anpassen je nach SVG-Größe */
+    max-width: 600px;
     height: auto;
     margin: 0 auto;
     display: block;
     cursor: crosshair;
-    pointer-events: auto; /* Stellt sicher dass SVG klickbar ist */
+    pointer-events: auto;
+    touch-action: none;
+}
+
+#azimuth-map:hover {
+    cursor: grab;
+}
+
+#azimuth-map:active {
+    cursor: grabbing;
 }
 
 .control-panel {
@@ -173,7 +183,7 @@ h1 {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     position: relative;
-    z-index: 2; /* Höher as die Karte */
+    z-index: 2;
 }
 
 .click-instruction {
@@ -181,6 +191,13 @@ h1 {
     color: #6c757d;
     font-style: italic;
     font-size: 0.9em;
+}
+
+.click-instruction small {
+    display: block;
+    font-style: italic;
+    color: #999;
+    margin-top: 5px;
 }
 
 /* Stelle sicher dass Buttons und Inputs klickbar bleiben */
