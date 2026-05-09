@@ -1,5 +1,5 @@
 # SOURCE: https://github.com/esp8266/arduino-esp8266fs-plugin/issues/51#issuecomment-739433154
-sketch          := work.ino
+sketch          := rotctl-simplefoc.ino
 boardconfig     := esp32:esp32:esp32
 
 ARDUINO_CLI ?= ~/arduino/arduino-cli
@@ -13,7 +13,7 @@ all: build
 
 .PHONY: build
 build:
-	$(ARDUINO_CLI) compile --fqbn $(boardconfig) --output-dir build $(sketch)
+	$(ARDUINO_CLI) compile --fqbn $(boardconfig) --output-dir build --build-property compiler.cpp.extra_flags="-Isrc/Arduino-FOC/src" $(sketch)
 
 .PHONY: upload
 upload: # filesystem.bin
